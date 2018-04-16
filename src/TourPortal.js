@@ -475,26 +475,18 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
             helperPosition,
         } = this.state;
 
-        console.log(this.state);
-
         // By default the prev button calls the prevStep function
         const onPrevArrowClick = this.prevStep;
         const isPrevArrowDisabled = current === 0;
         const prevArrowLabel = prevButton || null;
 
-        // Which class name to use
-        const prevArrowName = (prevArrowLabel !== null) ? labelName : arrowName;
         // Are we using a custom component for the prev arrow
-        const PrevArrow = components.PrevArrow
+        const hasCustomPrevArrow = components.PrevArrow !== null;
+        // Which name to use
+        const prevArrowName = (prevArrowLabel !== null || hasCustomPrevArrow) ? labelName : arrowName;
+        const PrevArrow = hasCustomPrevArrow
             ? components.PrevArrow
-            : () => (
-                <Arrow
-                    className={bem.scoped(className, prevArrowName)}
-                    onClick={onPrevArrowClick}
-                    disabled={isPrevArrowDisabled}
-                    label={prevArrowLabel}
-                />
-            );
+            : Arrow;
 
         // By default the next button calls the nextStep function
         let onNextArrowClick = this.nextStep;
@@ -508,23 +500,13 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
             ? lastStepNextButton
             : nextButton || null;
 
-        // Which class name to use
-        const nextArrowName = (nextArrowLabel !== null) ? labelName : arrowName;
         // Are we using a custom component for the next arrow
-        const NextArrow = components.NextArrow
+        const hasCustomNextArrow = components.NextArrow !== null;
+        // Which name to use
+        const nextArrowName = (nextArrowLabel !== null || hasCustomNextArrow) ? labelName : arrowName;
+        const NextArrow = hasCustomNextArrow
             ? components.NextArrow
-            : () => (
-                <Arrow
-                    className={bem.scoped(className, nextArrowName, {
-                        next: true,
-                        label: nextArrowLabel !== null,
-                    })}
-                    onClick={onNextArrowClick}
-                    disabled={isNextArrowDisabled}
-                    inverted
-                    label={nextArrowLabel}
-                />
-            );
+            : Arrow;
 
         // Custom dot component in use?
         const NavigationDot = components.Dot
@@ -629,8 +611,10 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
                         <div className={bem.scoped(className, controlsName)}>
                             {showButtons && (
                                 <PrevArrow
+                                    className={bem.scoped(className, prevArrowName)}
                                     onClick={onPrevArrowClick}
                                     disabled={isPrevArrowDisabled}
+                                    label={prevArrowLabel}
                                 />
                             )}
 
@@ -652,8 +636,14 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
 
                             {showButtons && (
                                 <NextArrow
+                                    className={bem.scoped(className, nextArrowName, {
+                                        next: true,
+                                        label: nextArrowLabel !== null,
+                                    })}
                                     onClick={onNextArrowClick}
                                     disabled={isNextArrowDisabled}
+                                    inverted
+                                    label={nextArrowLabel}
                                 />
                             )}
                         </div>

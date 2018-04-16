@@ -413,25 +413,17 @@ var TourPortal = function (_Component) {
                 helperHeight = _state.helperHeight,
                 helperPosition = _state.helperPosition;
 
-
-            console.log(this.state);
-
             // By default the prev button calls the prevStep function
+
             var onPrevArrowClick = this.prevStep;
             var isPrevArrowDisabled = current === 0;
             var prevArrowLabel = prevButton || null;
 
-            // Which class name to use
-            var prevArrowName = prevArrowLabel !== null ? labelName : arrowName;
             // Are we using a custom component for the prev arrow
-            var PrevArrow = components.PrevArrow ? components.PrevArrow : function () {
-                return _react2.default.createElement(_index.Arrow, {
-                    className: _bemHelper2.default.scoped(className, prevArrowName),
-                    onClick: onPrevArrowClick,
-                    disabled: isPrevArrowDisabled,
-                    label: prevArrowLabel
-                });
-            };
+            var hasCustomPrevArrow = components.PrevArrow !== null;
+            // Which name to use
+            var prevArrowName = prevArrowLabel !== null || hasCustomPrevArrow ? labelName : arrowName;
+            var PrevArrow = hasCustomPrevArrow ? components.PrevArrow : _index.Arrow;
 
             // By default the next button calls the nextStep function
             var onNextArrowClick = this.nextStep;
@@ -443,21 +435,11 @@ var TourPortal = function (_Component) {
             var isNextArrowDisabled = !lastStepNextButton && current === steps.length - 1;
             var nextArrowLabel = lastStepNextButton && isLastStep ? lastStepNextButton : nextButton || null;
 
-            // Which class name to use
-            var nextArrowName = nextArrowLabel !== null ? labelName : arrowName;
             // Are we using a custom component for the next arrow
-            var NextArrow = components.NextArrow ? components.NextArrow : function () {
-                return _react2.default.createElement(_index.Arrow, {
-                    className: _bemHelper2.default.scoped(className, nextArrowName, {
-                        next: true,
-                        label: nextArrowLabel !== null
-                    }),
-                    onClick: onNextArrowClick,
-                    disabled: isNextArrowDisabled,
-                    inverted: true,
-                    label: nextArrowLabel
-                });
-            };
+            var hasCustomNextArrow = components.NextArrow !== null;
+            // Which name to use
+            var nextArrowName = nextArrowLabel !== null || hasCustomNextArrow ? labelName : arrowName;
+            var NextArrow = hasCustomNextArrow ? components.NextArrow : _index.Arrow;
 
             // Custom dot component in use?
             var NavigationDot = components.Dot ? components.Dot : _index.Dot;
@@ -559,8 +541,10 @@ var TourPortal = function (_Component) {
                             'div',
                             { className: _bemHelper2.default.scoped(className, controlsName) },
                             showButtons && _react2.default.createElement(PrevArrow, {
+                                className: _bemHelper2.default.scoped(className, prevArrowName),
                                 onClick: onPrevArrowClick,
-                                disabled: isPrevArrowDisabled
+                                disabled: isPrevArrowDisabled,
+                                label: prevArrowLabel
                             }),
                             showNavigation && _react2.default.createElement(
                                 'nav',
@@ -580,8 +564,14 @@ var TourPortal = function (_Component) {
                                 })
                             ),
                             showButtons && _react2.default.createElement(NextArrow, {
+                                className: _bemHelper2.default.scoped(className, nextArrowName, {
+                                    next: true,
+                                    label: nextArrowLabel !== null
+                                }),
                                 onClick: onNextArrowClick,
-                                disabled: isNextArrowDisabled
+                                disabled: isNextArrowDisabled,
+                                inverted: true,
+                                label: nextArrowLabel
                             })
                         ),
                         _react2.default.createElement(CloseButton, {
