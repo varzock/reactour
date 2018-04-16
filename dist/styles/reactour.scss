@@ -1,4 +1,4 @@
-$ns: 'c-reactour';
+$ns: 'reactour';
 
 .#{$ns} {
 
@@ -14,7 +14,7 @@ $ns: 'c-reactour';
     position: fixed;
     background-color: #fff;
     transition: transform 0.3s;
-    padding: 24px 30px;
+    padding: 24px;
     box-shadow: 0 0.5em 3em rgba(0, 0, 0, 0.3);
     top: 0;
     left: 0;
@@ -23,10 +23,12 @@ $ns: 'c-reactour';
     max-width: 331px;
     min-width: 150px;
     outline: 0;
-    padding-right: 40px;
     border-radius: 5px;
   }
 
+  &__content {
+    padding-right: 40px;
+  }
 
   &__badge {
     position: absolute;
@@ -46,22 +48,27 @@ $ns: 'c-reactour';
   }
 
   &__controls {
-    display: flex;
     margin-top: 24px;
-    align-items: center;
-    justify-content: space-between;
+    display: flex;
   }
 
-  &__arrow, &__label {
+  &__skip-button {
+    margin-right: auto;
+  }
+
+  &__button {
     display: block;
     padding: 0;
     outline: 0;
     border: 0;
     background: none;
-    margin-right: 24px;
+    margin-right: 12px;
     color: #646464;
+    height: auto;
+    line-height: 16px;
+    font-size: 13px;
 
-    [disabled] {
+    &[disabled] {
       color: #caccce;
     }
 
@@ -73,17 +80,22 @@ $ns: 'c-reactour';
       }
     }
 
+    &--skip {
+      margin-right: auto;
+    }
+
     &--next {
       margin-right: 0;
-      margin-left: 24px;
+      margin-left: 12px;
     }
-  }
 
-  &__arrow {
-    width: 16px;
-    height: 12px;
-    flex: 0 0 16px;
-    font-size: 0;
+    &--no-text {
+      width: 16px;
+      height: 12px;
+      line-height: 1;
+      flex: 0 0 16px;
+      font-size: 0;
+    }
   }
 
   &__close-button {
@@ -149,5 +161,15 @@ $ns: 'c-reactour';
         transform: translate(-50%, -2px);
       }
     }
+  }
+
+  // Layouts
+  &--default .#{$ns}__controls {
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &--minimal .#{$ns}__controls {
+    justify-content: flex-end;
   }
 }

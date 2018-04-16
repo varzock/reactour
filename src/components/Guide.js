@@ -29,14 +29,11 @@ const Guide = styled.div`
             bottom: windowHeight - targetBottom,
         };
 
-        const couldPositionAt = (position) => {
-            return (
-                available[position] >
-        (hx.isHoriz(position)
-            ? helperWidth + padding * 2
-            : helperHeight + padding * 2)
-            );
-        };
+        const couldPositionAt = position => (
+            available[position] > (hx.isHoriz(position)
+                ? helperWidth + padding * 2
+                : helperHeight + padding * 2)
+        );
 
         const autoPosition = (coords) => {
             const positionsOrder = hx.bestPositionOf(available);

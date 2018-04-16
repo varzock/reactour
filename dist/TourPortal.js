@@ -38,11 +38,16 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DEFAULT_LAYOUT = 'default';
+var MINIMAL_LAYOUT = 'minimal';
 
 var setNodeState = function setNodeState(node, helper, position) {
     var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -372,31 +377,26 @@ var TourPortal = function (_Component) {
             var _this3 = this;
 
             var _props3 = this.props,
-                badgeName = _props3.badgeName,
                 className = _props3.className,
                 steps = _props3.steps,
                 maskName = _props3.maskName,
                 helperName = _props3.helperName,
+                contentName = _props3.contentName,
                 controlsName = _props3.controlsName,
                 showButtons = _props3.showButtons,
-                arrowName = _props3.arrowName,
-                labelName = _props3.labelName,
-                showNavigation = _props3.showNavigation,
-                showNavigationNumber = _props3.showNavigationNumber,
+                buttonName = _props3.buttonName,
+                showProgress = _props3.showProgress,
+                showProgressNumber = _props3.showProgressNumber,
                 navigationClassName = _props3.navigationClassName,
-                showNumber = _props3.showNumber,
                 dotClassName = _props3.dotClassName,
                 closeButtonClassName = _props3.closeButtonClassName,
                 onRequestClose = _props3.onRequestClose,
                 maskSpace = _props3.maskSpace,
-                lastStepNextButton = _props3.lastStepNextButton,
-                badgeContent = _props3.badgeContent,
                 highlightedMaskClassName = _props3.highlightedMaskClassName,
                 disableInteraction = _props3.disableInteraction,
                 locale = _props3.locale,
-                components = _props3.components;
-            var nextButton = locale.nextButton,
-                prevButton = locale.prevButton;
+                components = _props3.components,
+                layout = _props3.layout;
             var _state = this.state,
                 isOpen = _state.isOpen,
                 current = _state.current,
@@ -413,33 +413,23 @@ var TourPortal = function (_Component) {
                 helperHeight = _state.helperHeight,
                 helperPosition = _state.helperPosition;
 
+
+            var skipButtonLabel = locale.skip || null;
+
             // By default the prev button calls the prevStep function
-
-            var onPrevArrowClick = this.prevStep;
-            var isPrevArrowDisabled = current === 0;
-            var prevArrowLabel = prevButton || null;
-
-            // Are we using a custom component for the prev arrow
-            var hasCustomPrevArrow = components.PrevArrow !== null;
-            // Which name to use
-            var prevArrowName = prevArrowLabel !== null || hasCustomPrevArrow ? labelName : arrowName;
-            var PrevArrow = hasCustomPrevArrow ? components.PrevArrow : _index.Arrow;
+            var onPrevButtonClick = this.prevStep;
+            var isPrevButtonDisabled = current === 0;
+            var prevButtonLabel = locale.back || null;
 
             // By default the next button calls the nextStep function
-            var onNextArrowClick = this.nextStep;
+            var onNextButtonClick = this.nextStep;
             var isLastStep = current === steps.length - 1;
             if (isLastStep) {
                 var noop = function noop() {};
-                onNextArrowClick = lastStepNextButton ? onRequestClose : noop;
+                onNextButtonClick = locale.last ? onRequestClose : noop;
             }
-            var isNextArrowDisabled = !lastStepNextButton && current === steps.length - 1;
-            var nextArrowLabel = lastStepNextButton && isLastStep ? lastStepNextButton : nextButton || null;
-
-            // Are we using a custom component for the next arrow
-            var hasCustomNextArrow = components.NextArrow !== null;
-            // Which name to use
-            var nextArrowName = nextArrowLabel !== null || hasCustomNextArrow ? labelName : arrowName;
-            var NextArrow = hasCustomNextArrow ? components.NextArrow : _index.Arrow;
+            var isNextButtonDisabled = !locale.last && current === steps.length - 1;
+            var nextButtonLabel = locale.last && isLastStep ? locale.last : locale.next || null;
 
             // Custom dot component in use?
             var NavigationDot = components.Dot ? components.Dot : _index.Dot;
@@ -447,7 +437,12 @@ var TourPortal = function (_Component) {
             // Are we using a custom component for the close button?
             var CloseButton = components.CloseButton ? components.CloseButton : _index.Close;
 
+            // Show navigation dots?
+            var showNavigation = showProgress && layout === DEFAULT_LAYOUT;
+
             if (isOpen) {
+                var _bem$scoped;
+
                 return _react2.default.createElement(
                     'div',
                     null,
@@ -521,30 +516,41 @@ var TourPortal = function (_Component) {
                             tabIndex: -1,
                             current: current,
                             style: steps[current].style ? steps[current].style : {},
-                            className: _bemHelper2.default.scoped(className, helperName, {
+                            className: _bemHelper2.default.scoped(className, helperName, (_bem$scoped = {
                                 'is-open': isOpen
-                            })
+                            }, _defineProperty(_bem$scoped, DEFAULT_LAYOUT, layout === DEFAULT_LAYOUT), _defineProperty(_bem$scoped, MINIMAL_LAYOUT, layout === MINIMAL_LAYOUT), _bem$scoped))
                         },
-                        steps[current] && (typeof steps[current].content === 'function' ? steps[current].content({
-                            goTo: this.gotoStep,
-                            inDOM: inDOM,
-                            step: current + 1
-                        }) : steps[current].content),
-                        showNumber && _react2.default.createElement(
-                            'span',
-                            {
-                                className: _bemHelper2.default.scoped(className, badgeName)
-                            },
-                            typeof badgeContent === 'function' ? badgeContent(current + 1, steps.length) : current + 1
+                        _react2.default.createElement(
+                            'div',
+                            { className: _bemHelper2.default.scoped(className, contentName) },
+                            steps[current] && (typeof steps[current].content === 'function' ? steps[current].content({
+                                goTo: this.gotoStep,
+                                inDOM: inDOM,
+                                step: current + 1
+                            }) : steps[current].content)
                         ),
                         _react2.default.createElement(
                             'div',
-                            { className: _bemHelper2.default.scoped(className, controlsName) },
-                            showButtons && _react2.default.createElement(PrevArrow, {
-                                className: _bemHelper2.default.scoped(className, prevArrowName),
-                                onClick: onPrevArrowClick,
-                                disabled: isPrevArrowDisabled,
-                                label: prevArrowLabel
+                            { className: _bemHelper2.default.scoped(className, controlsName)
+                            },
+                            _react2.default.createElement(
+                                'button',
+                                {
+                                    className: _bemHelper2.default.scoped(className, buttonName, {
+                                        skip: true,
+                                        'no-text': buttonName === null
+                                    }),
+                                    onClick: onRequestClose
+                                },
+                                skipButtonLabel
+                            ),
+                            showButtons && _react2.default.createElement(components.PrevButton, {
+                                className: _bemHelper2.default.scoped(className, buttonName, {
+                                    'no-text': prevButtonLabel === null
+                                }),
+                                onClick: onPrevButtonClick,
+                                disabled: isPrevButtonDisabled,
+                                label: prevButtonLabel
                             }),
                             showNavigation && _react2.default.createElement(
                                 'nav',
@@ -558,20 +564,20 @@ var TourPortal = function (_Component) {
                                         current: current,
                                         index: i,
                                         disabled: current === i,
-                                        showNumber: showNavigationNumber,
+                                        showNumber: showProgressNumber,
                                         className: _bemHelper2.default.scoped(className, dotClassName)
                                     });
                                 })
                             ),
-                            showButtons && _react2.default.createElement(NextArrow, {
-                                className: _bemHelper2.default.scoped(className, nextArrowName, {
+                            showButtons && _react2.default.createElement(components.NextButton, {
+                                className: _bemHelper2.default.scoped(className, buttonName, {
                                     next: true,
-                                    label: nextArrowLabel !== null
+                                    'no-text': nextButtonLabel === null
                                 }),
-                                onClick: onNextArrowClick,
-                                disabled: isNextArrowDisabled,
+                                onClick: onNextButtonClick,
+                                disabled: isNextButtonDisabled,
                                 inverted: true,
-                                label: nextArrowLabel
+                                label: nextButtonLabel
                             })
                         ),
                         _react2.default.createElement(CloseButton, {
@@ -590,15 +596,13 @@ var TourPortal = function (_Component) {
 }(_react.Component);
 
 TourPortal.propTypes = {
-    badgeContent: _propTypes2.default.func,
-    badgeName: _propTypes2.default.string,
-    highlightedMaskClassName: _propTypes2.default.string,
     className: _propTypes2.default.string,
+    highlightedMaskClassName: _propTypes2.default.string,
     closeWithMask: _propTypes2.default.bool,
     inViewThreshold: _propTypes2.default.number,
     isOpen: _propTypes2.default.bool.isRequired,
-    lastStepNextButton: _propTypes2.default.string,
     helperName: _propTypes2.default.string,
+    contentName: _propTypes2.default.string,
     maskName: _propTypes2.default.string,
     maskSpace: _propTypes2.default.number,
     controlsName: _propTypes2.default.string,
@@ -609,12 +613,10 @@ TourPortal.propTypes = {
     scrollDuration: _propTypes2.default.number,
     scrollOffset: _propTypes2.default.number,
     showButtons: _propTypes2.default.bool,
-    arrowName: _propTypes2.default.string,
-    labelName: _propTypes2.default.string,
-    showNavigation: _propTypes2.default.bool,
-    showNavigationNumber: _propTypes2.default.bool,
+    buttonName: _propTypes2.default.string,
+    showProgress: _propTypes2.default.bool,
+    showProgressNumber: _propTypes2.default.bool,
     navigationClassName: _propTypes2.default.string,
-    showNumber: _propTypes2.default.bool,
     dotClassName: _propTypes2.default.string,
     startAt: _propTypes2.default.number,
     steps: _propTypes2.default.arrayOf(_propTypes2.default.shape({
@@ -628,19 +630,21 @@ TourPortal.propTypes = {
     updateDelay: _propTypes2.default.number,
     disableInteraction: _propTypes2.default.bool,
     components: _propTypes2.default.shape({
-        NextArrow: _propTypes2.default.oneOfType([_propTypes2.default.node, _propTypes2.default.func]),
-        PrevArrow: _propTypes2.default.oneOfType([_propTypes2.default.node, _propTypes2.default.func]),
+        NextButton: _propTypes2.default.oneOfType([_propTypes2.default.node, _propTypes2.default.func]),
+        PrevButton: _propTypes2.default.oneOfType([_propTypes2.default.node, _propTypes2.default.func]),
         Dot: _propTypes2.default.oneOfType([_propTypes2.default.node, _propTypes2.default.func]),
         CloseButton: _propTypes2.default.oneOfType([_propTypes2.default.node, _propTypes2.default.func])
     }),
     locale: _propTypes2.default.shape({
-        nextButton: _propTypes2.default.string,
-        prevButton: _propTypes2.default.string
-    })
+        skip: _propTypes2.default.string,
+        next: _propTypes2.default.string,
+        back: _propTypes2.default.string,
+        last: _propTypes2.default.string
+    }),
+    layout: _propTypes2.default.oneOf([DEFAULT_LAYOUT, MINIMAL_LAYOUT])
 };
 TourPortal.defaultProps = {
-    badgeName: 'badge',
-    className: 'c-reactour',
+    className: 'reactour',
     onAfterOpen: function onAfterOpen() {
         document.body.style.overflowY = 'hidden';
     },
@@ -649,31 +653,34 @@ TourPortal.defaultProps = {
     },
     onRequestClose: function onRequestClose() {},
     closeButtonClassName: 'close-button',
-    showNavigation: true,
-    showNavigationNumber: true,
+    showProgress: true,
+    showProgressNumber: true,
     navigationClassName: 'navigation',
     showButtons: true,
-    arrowName: 'arrow',
-    labelName: 'label',
-    showNumber: true,
+    buttonName: 'button',
     dotClassName: 'dot',
     scrollDuration: 1,
     scrollOffset: 0,
     helperName: 'helper',
+    contentName: 'content',
     maskName: 'mask',
     maskSpace: 10,
     controlsName: 'controls',
     updateDelay: 1,
     disableInteraction: false,
     locale: {
-        nextButton: '',
-        prevButton: ''
+        close: 'Close',
+        skip: 'Skip',
+        next: 'Next',
+        back: 'Back',
+        last: 'Last'
     },
     components: {
-        NextArrow: null,
-        PrevArrow: null,
+        NextButton: _index.Arrow,
+        PrevButton: _index.Arrow,
         Dot: null,
         CloseButton: null
-    }
+    },
+    layout: DEFAULT_LAYOUT
 };
 exports.default = TourPortal;

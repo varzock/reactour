@@ -44,11 +44,7 @@ class App extends Component {
                   onRequestClose={this.closeTour}
                   steps={tourConfig}
                   isOpen={isTourOpen}
-                  components={{
-                      PrevArrow: ({ onClick, className }) => <button onClick={onClick} className={className}>{'<-'}</button>,
-                      NextArrow: ({ onClick, className }) => <button onClick={onClick} className={className}>{'->'}</button>,
-                      CloseButton: ({ onClick, className }) => <button onClick={onClick} className={className}>x</button>
-                  }}
+                  layout="minimal"
               />
           </div>
       );

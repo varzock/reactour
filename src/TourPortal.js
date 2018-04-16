@@ -16,6 +16,9 @@ import {
 } from './components/index';
 import * as hx from './helpers';
 
+const DEFAULT_LAYOUT = 'default';
+const MINIMAL_LAYOUT = 'minimal';
+
 const setNodeState = (node, helper, position) => {
     const w = Math.max(
         document.documentElement.clientWidth,
@@ -55,15 +58,13 @@ const setNodeState = (node, helper, position) => {
 
 class TourPortal extends Component {
     static propTypes = {
-        badgeContent: PropTypes.func,
-        badgeName: PropTypes.string,
-        highlightedMaskClassName: PropTypes.string,
         className: PropTypes.string,
+        highlightedMaskClassName: PropTypes.string,
         closeWithMask: PropTypes.bool,
         inViewThreshold: PropTypes.number,
         isOpen: PropTypes.bool.isRequired,
-        lastStepNextButton: PropTypes.string,
         helperName: PropTypes.string,
+        contentName: PropTypes.string,
         maskName: PropTypes.string,
         maskSpace: PropTypes.number,
         controlsName: PropTypes.string,
@@ -74,12 +75,10 @@ class TourPortal extends Component {
         scrollDuration: PropTypes.number,
         scrollOffset: PropTypes.number,
         showButtons: PropTypes.bool,
-        arrowName: PropTypes.string,
-        labelName: PropTypes.string,
-        showNavigation: PropTypes.bool,
-        showNavigationNumber: PropTypes.bool,
+        buttonName: PropTypes.string,
+        showProgress: PropTypes.bool,
+        showProgressNumber: PropTypes.bool,
         navigationClassName: PropTypes.string,
-        showNumber: PropTypes.bool,
         dotClassName: PropTypes.string,
         startAt: PropTypes.number,
         steps: PropTypes.arrayOf(PropTypes.shape({
@@ -97,20 +96,22 @@ class TourPortal extends Component {
         updateDelay: PropTypes.number,
         disableInteraction: PropTypes.bool,
         components: PropTypes.shape({
-            NextArrow: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
-            PrevArrow: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+            NextButton: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
+            PrevButton: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
             Dot: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
             CloseButton: PropTypes.oneOfType([PropTypes.node, PropTypes.func]),
         }),
         locale: PropTypes.shape({
-            nextButton: PropTypes.string,
-            prevButton: PropTypes.string,
+            skip: PropTypes.string,
+            next: PropTypes.string,
+            back: PropTypes.string,
+            last: PropTypes.string,
         }),
+        layout: PropTypes.oneOf([DEFAULT_LAYOUT, MINIMAL_LAYOUT]),
     };
 
     static defaultProps = {
-        badgeName: 'badge',
-        className: 'c-reactour',
+        className: 'reactour',
         onAfterOpen: () => {
             document.body.style.overflowY = 'hidden';
         },
@@ -119,32 +120,35 @@ class TourPortal extends Component {
         },
         onRequestClose: () => {},
         closeButtonClassName: 'close-button',
-        showNavigation: true,
-        showNavigationNumber: true,
+        showProgress: true,
+        showProgressNumber: true,
         navigationClassName: 'navigation',
         showButtons: true,
-        arrowName: 'arrow',
-        labelName: 'label',
-        showNumber: true,
+        buttonName: 'button',
         dotClassName: 'dot',
         scrollDuration: 1,
         scrollOffset: 0,
         helperName: 'helper',
+        contentName: 'content',
         maskName: 'mask',
         maskSpace: 10,
         controlsName: 'controls',
         updateDelay: 1,
         disableInteraction: false,
         locale: {
-            nextButton: '',
-            prevButton: '',
+            close: 'Close',
+            skip: 'Skip',
+            next: 'Next',
+            back: 'Back',
+            last: 'Last',
         },
         components: {
-            NextArrow: null,
-            PrevArrow: null,
+            NextButton: Arrow,
+            PrevButton: Arrow,
             Dot: null,
             CloseButton: null,
         },
+        layout: DEFAULT_LAYOUT,
     };
 
     state = {
@@ -428,35 +432,27 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
 
     render() {
         const {
-            badgeName,
             className,
             steps,
             maskName,
             helperName,
+            contentName,
             controlsName,
             showButtons,
-            arrowName,
-            labelName,
-            showNavigation,
-            showNavigationNumber,
+            buttonName,
+            showProgress,
+            showProgressNumber,
             navigationClassName,
-            showNumber,
             dotClassName,
             closeButtonClassName,
             onRequestClose,
             maskSpace,
-            lastStepNextButton,
-            badgeContent,
             highlightedMaskClassName,
             disableInteraction,
             locale,
             components,
+            layout,
         } = this.props;
-
-        const {
-            nextButton,
-            prevButton,
-        } = locale;
 
         const {
             isOpen,
@@ -475,38 +471,24 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
             helperPosition,
         } = this.state;
 
-        // By default the prev button calls the prevStep function
-        const onPrevArrowClick = this.prevStep;
-        const isPrevArrowDisabled = current === 0;
-        const prevArrowLabel = prevButton || null;
+        const skipButtonLabel = locale.skip || null;
 
-        // Are we using a custom component for the prev arrow
-        const hasCustomPrevArrow = components.PrevArrow !== null;
-        // Which name to use
-        const prevArrowName = (prevArrowLabel !== null || hasCustomPrevArrow) ? labelName : arrowName;
-        const PrevArrow = hasCustomPrevArrow
-            ? components.PrevArrow
-            : Arrow;
+        // By default the prev button calls the prevStep function
+        const onPrevButtonClick = this.prevStep;
+        const isPrevButtonDisabled = current === 0;
+        const prevButtonLabel = locale.back || null;
 
         // By default the next button calls the nextStep function
-        let onNextArrowClick = this.nextStep;
+        let onNextButtonClick = this.nextStep;
         const isLastStep = current === (steps.length - 1);
         if (isLastStep) {
             const noop = () => {};
-            onNextArrowClick = lastStepNextButton ? onRequestClose : noop;
+            onNextButtonClick = locale.last ? onRequestClose : noop;
         }
-        const isNextArrowDisabled = !lastStepNextButton && current === steps.length - 1;
-        const nextArrowLabel = (lastStepNextButton && isLastStep)
-            ? lastStepNextButton
-            : nextButton || null;
-
-        // Are we using a custom component for the next arrow
-        const hasCustomNextArrow = components.NextArrow !== null;
-        // Which name to use
-        const nextArrowName = (nextArrowLabel !== null || hasCustomNextArrow) ? labelName : arrowName;
-        const NextArrow = hasCustomNextArrow
-            ? components.NextArrow
-            : Arrow;
+        const isNextButtonDisabled = !locale.last && current === steps.length - 1;
+        const nextButtonLabel = (locale.last && isLastStep)
+            ? locale.last
+            : locale.next || null;
 
         // Custom dot component in use?
         const NavigationDot = components.Dot
@@ -517,6 +499,9 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
         const CloseButton = components.CloseButton
             ? components.CloseButton
             : Close;
+
+        // Show navigation dots?
+        const showNavigation = showProgress && layout === DEFAULT_LAYOUT;
 
         if (isOpen) {
             return (
@@ -587,34 +572,40 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
                         style={steps[current].style ? steps[current].style : {}}
                         className={bem.scoped(className, helperName, {
                             'is-open': isOpen,
+                            [DEFAULT_LAYOUT]: layout === DEFAULT_LAYOUT,
+                            [MINIMAL_LAYOUT]: layout === MINIMAL_LAYOUT,
                         })}
                     >
-                        {steps[current] &&
-                        (typeof steps[current].content === 'function'
-                            ? steps[current].content({
-                                goTo: this.gotoStep,
-                                inDOM,
-                                step: current + 1,
-                            })
-                            : steps[current].content)}
-                        {showNumber && (
-                            <span
-                                className={bem.scoped(className, badgeName)}
+                        <div className={bem.scoped(className, contentName)}>
+                            {steps[current] &&
+                            (typeof steps[current].content === 'function'
+                                ? steps[current].content({
+                                    goTo: this.gotoStep,
+                                    inDOM,
+                                    step: current + 1,
+                                })
+                                : steps[current].content)}
+                        </div>
+
+                        <div className={bem.scoped(className, controlsName)}
+                        >
+                            <button
+                                className={bem.scoped(className, buttonName, {
+                                    skip: true,
+                                    'no-text': buttonName === null,
+                                })}
+                                onClick={onRequestClose}
                             >
-                                {typeof badgeContent === 'function' ? (
-                                    badgeContent(current + 1, steps.length)
-                                ) : (
-                                    current + 1
-                                )}
-                            </span>
-                        )}
-                        <div className={bem.scoped(className, controlsName)}>
+                                {skipButtonLabel}
+                            </button>
                             {showButtons && (
-                                <PrevArrow
-                                    className={bem.scoped(className, prevArrowName)}
-                                    onClick={onPrevArrowClick}
-                                    disabled={isPrevArrowDisabled}
-                                    label={prevArrowLabel}
+                                <components.PrevButton
+                                    className={bem.scoped(className, buttonName, {
+                                        'no-text': prevButtonLabel === null,
+                                    })}
+                                    onClick={onPrevButtonClick}
+                                    disabled={isPrevButtonDisabled}
+                                    label={prevButtonLabel}
                                 />
                             )}
 
@@ -627,7 +618,7 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
                                             current={current}
                                             index={i}
                                             disabled={current === i}
-                                            showNumber={showNavigationNumber}
+                                            showNumber={showProgressNumber}
                                             className={bem.scoped(className, dotClassName)}
                                         />
                                     ))}
@@ -635,15 +626,15 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
                             )}
 
                             {showButtons && (
-                                <NextArrow
-                                    className={bem.scoped(className, nextArrowName, {
+                                <components.NextButton
+                                    className={bem.scoped(className, buttonName, {
                                         next: true,
-                                        label: nextArrowLabel !== null,
+                                        'no-text': nextButtonLabel === null,
                                     })}
-                                    onClick={onNextArrowClick}
-                                    disabled={isNextArrowDisabled}
+                                    onClick={onNextButtonClick}
+                                    disabled={isNextButtonDisabled}
                                     inverted
-                                    label={nextArrowLabel}
+                                    label={nextButtonLabel}
                                 />
                             )}
                         </div>
