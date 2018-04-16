@@ -56,17 +56,17 @@ const setNodeState = (node, helper, position) => {
 class TourPortal extends Component {
     static propTypes = {
         badgeContent: PropTypes.func,
-        badgeClassName: PropTypes.string,
+        badgeName: PropTypes.string,
         highlightedMaskClassName: PropTypes.string,
         className: PropTypes.string,
         closeWithMask: PropTypes.bool,
         inViewThreshold: PropTypes.number,
         isOpen: PropTypes.bool.isRequired,
         lastStepNextButton: PropTypes.string,
-        helperClassName: PropTypes.string,
-        maskClassName: PropTypes.string,
+        helperName: PropTypes.string,
+        maskName: PropTypes.string,
         maskSpace: PropTypes.number,
-        controlsClassName: PropTypes.string,
+        controlsName: PropTypes.string,
         onAfterOpen: PropTypes.func,
         onBeforeClose: PropTypes.func,
         closeButtonClassName: PropTypes.string,
@@ -74,8 +74,8 @@ class TourPortal extends Component {
         scrollDuration: PropTypes.number,
         scrollOffset: PropTypes.number,
         showButtons: PropTypes.bool,
-        arrowClassName: PropTypes.string,
-        labelClassName: PropTypes.string,
+        arrowName: PropTypes.string,
+        labelName: PropTypes.string,
         showNavigation: PropTypes.bool,
         showNavigationNumber: PropTypes.bool,
         navigationClassName: PropTypes.string,
@@ -109,7 +109,7 @@ class TourPortal extends Component {
     };
 
     static defaultProps = {
-        badgeClassName: 'badge',
+        badgeName: 'badge',
         className: 'c-reactour',
         onAfterOpen: () => {
             document.body.style.overflowY = 'hidden';
@@ -123,16 +123,16 @@ class TourPortal extends Component {
         showNavigationNumber: true,
         navigationClassName: 'navigation',
         showButtons: true,
-        arrowClassName: 'arrow',
-        labelClassName: 'label',
+        arrowName: 'arrow',
+        labelName: 'label',
         showNumber: true,
         dotClassName: 'dot',
         scrollDuration: 1,
         scrollOffset: 0,
-        helperClassName: 'helper',
-        maskClassName: 'mask',
+        helperName: 'helper',
+        maskName: 'mask',
         maskSpace: 10,
-        controlsClassName: 'controls',
+        controlsName: 'controls',
         updateDelay: 1,
         disableInteraction: false,
         locale: {
@@ -428,15 +428,15 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
 
     render() {
         const {
-            badgeClassName,
+            badgeName,
             className,
             steps,
-            maskClassName,
-            helperClassName,
-            controlsClassName,
+            maskName,
+            helperName,
+            controlsName,
             showButtons,
-            arrowClassName,
-            labelClassName,
+            arrowName,
+            labelName,
             showNavigation,
             showNavigationNumber,
             navigationClassName,
@@ -483,13 +483,13 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
         const prevArrowLabel = prevButton || null;
 
         // Which class name to use
-        const prevArrowClassName = (prevArrowLabel !== null) ? labelClassName : arrowClassName;
+        const prevArrowName = (prevArrowLabel !== null) ? labelName : arrowName;
         // Are we using a custom component for the prev arrow
         const PrevArrow = components.PrevArrow
             ? components.PrevArrow
             : () => (
                 <Arrow
-                    className={bem.scoped(className, prevArrowClassName)}
+                    className={bem.scoped(className, prevArrowName)}
                     onClick={onPrevArrowClick}
                     disabled={isPrevArrowDisabled}
                     label={prevArrowLabel}
@@ -509,13 +509,13 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
             : nextButton || null;
 
         // Which class name to use
-        const nextArrowClassName = (nextArrowLabel !== null) ? labelClassName : arrowClassName;
+        const nextArrowName = (nextArrowLabel !== null) ? labelName : arrowName;
         // Are we using a custom component for the next arrow
         const NextArrow = components.NextArrow
             ? components.NextArrow
             : () => (
                 <Arrow
-                    className={bem.scoped(className, nextArrowClassName, {
+                    className={bem.scoped(className, nextArrowName, {
                         next: true,
                         label: nextArrowLabel !== null,
                     })}
@@ -543,14 +543,14 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
                         role="button"
                         ref={c => (this.mask = c)}
                         onClick={this.maskClickHandler}
-                        className={bem.scoped(className, maskClassName, {
+                        className={bem.scoped(className, maskName, {
                             'is-open': isOpen,
                         })}
                     >
                         <TopMask
                             targetTop={targetTop}
                             padding={maskSpace}
-                            className={maskClassName}
+                            className={maskName}
                         />
                         <RightMask
                             targetTop={targetTop}
@@ -559,21 +559,21 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
                             targetHeight={targetHeight}
                             windowWidth={windowWidth}
                             padding={maskSpace}
-                            className={maskClassName}
+                            className={maskName}
                         />
                         <BottomMask
                             targetHeight={targetHeight}
                             targetTop={targetTop}
                             windowHeight={windowHeight}
                             padding={maskSpace}
-                            className={maskClassName}
+                            className={maskName}
                         />
                         <LeftMask
                             targetHeight={targetHeight}
                             targetTop={targetTop}
                             targetLeft={targetLeft}
                             padding={maskSpace}
-                            className={maskClassName}
+                            className={maskName}
                         />
                     </div>
                     {disableInteraction && (
@@ -603,7 +603,7 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
                         tabIndex={-1}
                         current={current}
                         style={steps[current].style ? steps[current].style : {}}
-                        className={bem.scoped(className, helperClassName, {
+                        className={bem.scoped(className, helperName, {
                             'is-open': isOpen,
                         })}
                     >
@@ -617,7 +617,7 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
                             : steps[current].content)}
                         {showNumber && (
                             <span
-                                className={bem.scoped(className, badgeClassName)}
+                                className={bem.scoped(className, badgeName)}
                             >
                                 {typeof badgeContent === 'function' ? (
                                     badgeContent(current + 1, steps.length)
@@ -626,7 +626,7 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
                                 )}
                             </span>
                         )}
-                        <div className={bem.scoped(className, controlsClassName)}>
+                        <div className={bem.scoped(className, controlsName)}>
                             {showButtons && (
                                 <PrevArrow
                                     onClick={onPrevArrowClick}

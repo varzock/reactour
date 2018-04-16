@@ -372,15 +372,15 @@ var TourPortal = function (_Component) {
             var _this3 = this;
 
             var _props3 = this.props,
-                badgeClassName = _props3.badgeClassName,
+                badgeName = _props3.badgeName,
                 className = _props3.className,
                 steps = _props3.steps,
-                maskClassName = _props3.maskClassName,
-                helperClassName = _props3.helperClassName,
-                controlsClassName = _props3.controlsClassName,
+                maskName = _props3.maskName,
+                helperName = _props3.helperName,
+                controlsName = _props3.controlsName,
                 showButtons = _props3.showButtons,
-                arrowClassName = _props3.arrowClassName,
-                labelClassName = _props3.labelClassName,
+                arrowName = _props3.arrowName,
+                labelName = _props3.labelName,
                 showNavigation = _props3.showNavigation,
                 showNavigationNumber = _props3.showNavigationNumber,
                 navigationClassName = _props3.navigationClassName,
@@ -422,11 +422,11 @@ var TourPortal = function (_Component) {
             var prevArrowLabel = prevButton || null;
 
             // Which class name to use
-            var prevArrowClassName = prevArrowLabel !== null ? labelClassName : arrowClassName;
+            var prevArrowName = prevArrowLabel !== null ? labelName : arrowName;
             // Are we using a custom component for the prev arrow
             var PrevArrow = components.PrevArrow ? components.PrevArrow : function () {
                 return _react2.default.createElement(_index.Arrow, {
-                    className: _bemHelper2.default.scoped(className, prevArrowClassName),
+                    className: _bemHelper2.default.scoped(className, prevArrowName),
                     onClick: onPrevArrowClick,
                     disabled: isPrevArrowDisabled,
                     label: prevArrowLabel
@@ -444,11 +444,11 @@ var TourPortal = function (_Component) {
             var nextArrowLabel = lastStepNextButton && isLastStep ? lastStepNextButton : nextButton || null;
 
             // Which class name to use
-            var nextArrowClassName = nextArrowLabel !== null ? labelClassName : arrowClassName;
+            var nextArrowName = nextArrowLabel !== null ? labelName : arrowName;
             // Are we using a custom component for the next arrow
             var NextArrow = components.NextArrow ? components.NextArrow : function () {
                 return _react2.default.createElement(_index.Arrow, {
-                    className: _bemHelper2.default.scoped(className, nextArrowClassName, {
+                    className: _bemHelper2.default.scoped(className, nextArrowName, {
                         next: true,
                         label: nextArrowLabel !== null
                     }),
@@ -477,14 +477,14 @@ var TourPortal = function (_Component) {
                                 return _this3.mask = c;
                             },
                             onClick: this.maskClickHandler,
-                            className: _bemHelper2.default.scoped(className, maskClassName, {
+                            className: _bemHelper2.default.scoped(className, maskName, {
                                 'is-open': isOpen
                             })
                         },
                         _react2.default.createElement(_index.TopMask, {
                             targetTop: targetTop,
                             padding: maskSpace,
-                            className: maskClassName
+                            className: maskName
                         }),
                         _react2.default.createElement(_index.RightMask, {
                             targetTop: targetTop,
@@ -493,21 +493,21 @@ var TourPortal = function (_Component) {
                             targetHeight: targetHeight,
                             windowWidth: windowWidth,
                             padding: maskSpace,
-                            className: maskClassName
+                            className: maskName
                         }),
                         _react2.default.createElement(_index.BottomMask, {
                             targetHeight: targetHeight,
                             targetTop: targetTop,
                             windowHeight: windowHeight,
                             padding: maskSpace,
-                            className: maskClassName
+                            className: maskName
                         }),
                         _react2.default.createElement(_index.LeftMask, {
                             targetHeight: targetHeight,
                             targetTop: targetTop,
                             targetLeft: targetLeft,
                             padding: maskSpace,
-                            className: maskClassName
+                            className: maskName
                         })
                     ),
                     disableInteraction && _react2.default.createElement(_index.ElementMask, {
@@ -539,7 +539,7 @@ var TourPortal = function (_Component) {
                             tabIndex: -1,
                             current: current,
                             style: steps[current].style ? steps[current].style : {},
-                            className: _bemHelper2.default.scoped(className, helperClassName, {
+                            className: _bemHelper2.default.scoped(className, helperName, {
                                 'is-open': isOpen
                             })
                         },
@@ -551,13 +551,13 @@ var TourPortal = function (_Component) {
                         showNumber && _react2.default.createElement(
                             'span',
                             {
-                                className: _bemHelper2.default.scoped(className, badgeClassName)
+                                className: _bemHelper2.default.scoped(className, badgeName)
                             },
                             typeof badgeContent === 'function' ? badgeContent(current + 1, steps.length) : current + 1
                         ),
                         _react2.default.createElement(
                             'div',
-                            { className: _bemHelper2.default.scoped(className, controlsClassName) },
+                            { className: _bemHelper2.default.scoped(className, controlsName) },
                             showButtons && _react2.default.createElement(PrevArrow, {
                                 onClick: onPrevArrowClick,
                                 disabled: isPrevArrowDisabled
@@ -601,17 +601,17 @@ var TourPortal = function (_Component) {
 
 TourPortal.propTypes = {
     badgeContent: _propTypes2.default.func,
-    badgeClassName: _propTypes2.default.string,
+    badgeName: _propTypes2.default.string,
     highlightedMaskClassName: _propTypes2.default.string,
     className: _propTypes2.default.string,
     closeWithMask: _propTypes2.default.bool,
     inViewThreshold: _propTypes2.default.number,
     isOpen: _propTypes2.default.bool.isRequired,
     lastStepNextButton: _propTypes2.default.string,
-    helperClassName: _propTypes2.default.string,
-    maskClassName: _propTypes2.default.string,
+    helperName: _propTypes2.default.string,
+    maskName: _propTypes2.default.string,
     maskSpace: _propTypes2.default.number,
-    controlsClassName: _propTypes2.default.string,
+    controlsName: _propTypes2.default.string,
     onAfterOpen: _propTypes2.default.func,
     onBeforeClose: _propTypes2.default.func,
     closeButtonClassName: _propTypes2.default.string,
@@ -619,8 +619,8 @@ TourPortal.propTypes = {
     scrollDuration: _propTypes2.default.number,
     scrollOffset: _propTypes2.default.number,
     showButtons: _propTypes2.default.bool,
-    arrowClassName: _propTypes2.default.string,
-    labelClassName: _propTypes2.default.string,
+    arrowName: _propTypes2.default.string,
+    labelName: _propTypes2.default.string,
     showNavigation: _propTypes2.default.bool,
     showNavigationNumber: _propTypes2.default.bool,
     navigationClassName: _propTypes2.default.string,
@@ -649,7 +649,7 @@ TourPortal.propTypes = {
     })
 };
 TourPortal.defaultProps = {
-    badgeClassName: 'badge',
+    badgeName: 'badge',
     className: 'c-reactour',
     onAfterOpen: function onAfterOpen() {
         document.body.style.overflowY = 'hidden';
@@ -663,16 +663,16 @@ TourPortal.defaultProps = {
     showNavigationNumber: true,
     navigationClassName: 'navigation',
     showButtons: true,
-    arrowClassName: 'arrow',
-    labelClassName: 'label',
+    arrowName: 'arrow',
+    labelName: 'label',
     showNumber: true,
     dotClassName: 'dot',
     scrollDuration: 1,
     scrollOffset: 0,
-    helperClassName: 'helper',
-    maskClassName: 'mask',
+    helperName: 'helper',
+    maskName: 'mask',
     maskSpace: 10,
-    controlsClassName: 'controls',
+    controlsName: 'controls',
     updateDelay: 1,
     disableInteraction: false,
     locale: {

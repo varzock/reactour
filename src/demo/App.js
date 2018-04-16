@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Demo from './Demo';
 import Tour from '../index';
 import './styles.css';
+import '../styles/reactour.scss';
 import Text from './Text';
 import Glitch from './Glitch';
 import Tooltip from './Tooltip';

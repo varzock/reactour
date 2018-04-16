@@ -4,8 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-require('./styles/reactour.scss');
-
 var _Tour = require('./Tour');
 
 var _Tour2 = _interopRequireDefault(_Tour);
