@@ -1,5 +1,5 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from 'react';
+import styled from 'styled-components';
 
 export default styled.section`
   min-height: 100vh;
@@ -7,5 +7,5 @@ export default styled.section`
   margin: auto;
   padding: 1em;
   text-align: ${props =>
-    props.center ? 'center' : props.align ? props.align : 'left'}
-`
+        (props.center ? 'center' : props.align ? props.align : 'left')}
+`;

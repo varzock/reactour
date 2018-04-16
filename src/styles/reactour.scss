@@ -1,0 +1,152 @@
+$ns: 'c-reactour';
+
+.#{$ns} {
+
+  &__navigation {
+    counter-reset: dot;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__helper {
+    --reactour-accent: #007aff;
+    position: fixed;
+    background-color: #fff;
+    transition: transform 0.3s;
+    padding: 24px 30px;
+    box-shadow: 0 0.5em 3em rgba(0, 0, 0, 0.3);
+    top: 0;
+    left: 0;
+    color: inherit;
+    z-index: 1000000;
+    max-width: 331px;
+    min-width: 150px;
+    outline: 0;
+    padding-right: 40px;
+    border-radius: 5px;
+  }
+
+  &__badge {
+    position: absolute;
+    font-family: monospace;
+    background-color: var(--reactour-accent);
+    height: 1.875em;
+    line-height: 2;
+    padding-left: .8125em;
+    padding-right: .8125em;
+    font-size: 1em;
+    border-radius: 1.625em;
+    color: white;
+    text-align: center;
+    box-shadow: 0 .25em .5em rgba(0,0,0,.3);
+    top: -.8125em;
+    left: -.8125em;
+  }
+
+  &__controls {
+    display: flex;
+    margin-top: 24px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__arrow, &__label {
+    display: block;
+    padding: 0;
+    outline: 0;
+    border: 0;
+    background: none;
+    margin-right: 24px;
+    color: #646464;
+
+    [disabled] {
+      color: #caccce;
+    }
+
+    &:not([disabled]) {
+      cursor: pointer;
+
+      &:hover {
+        color: #000;
+      }
+    }
+
+    &--next {
+      margin-right: 0;
+      margin-left: 24px;
+    }
+  }
+
+  &__arrow {
+    width: 16px;
+    height: 12px;
+    flex: 0 0 16px;
+    font-size: 0;
+  }
+
+  &__close-button {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    width: 9px;
+    height: 9px;
+    color: #5e5e5e;
+    border: none;
+    padding: 0;
+    outline: none;
+    cursor: pointer;
+
+    &:hover {
+      color: #000;
+    }
+  }
+
+  &__dot {
+    counter-increment: dot;
+    width: 8px;
+    height: 8px;
+    border: 1px solid;
+    border-radius: 100%;
+    padding: 0;
+    display: block;
+    margin: 4px;
+    outline: 0;
+    transition: opacity .3s, transform .3s;
+    cursor: pointer;
+    transform: scale(1);
+    color: #caccce;
+    background-color: transparent;
+
+    &--is-current {
+      cursor: default;
+      transform: scale(1.25);
+      color: var(--reactour-accent);
+      background-color: var(--reactour-accent);
+    }
+
+    &:before {
+      content: counter(dot);
+      position: absolute;
+      bottom: calc(100% + .25em);
+      left: 50%;
+      opacity: 0;
+      transform: translate(-50%, 1em);
+      transition: .3s;
+      display: none;
+    }
+
+    &--show-number:before {
+      display: block;
+    }
+
+    &:hover {
+      background-color: currentColor;
+
+      &:before {
+        opacity: .5;
+        transform: translate(-50%, -2px);
+      }
+    }
+  }
+}

@@ -1,43 +1,36 @@
-import styled from 'styled-components'
+import React from 'react';
+import PropTypes from 'prop-types';
+import bem from '@dr/bem-helper';
 
-const Dot = styled.button`
-  counter-increment: dot;
-  width: 8px;
-  height: 8px;
-  border: 1px solid;
-  border-radius: 100%;
-  padding: 0;
-  display: block;
-  margin: 4px;
-  outline: 0;
-  transition: opacity .3s, transform .3s;
-  cursor: ${props => (props.current === props.index ? 'default' : 'pointer')};
-  transform: scale(${props => (props.current === props.index ? 1.25 : 1)});
-  color: ${props =>
-    props.current === props.index ? 'var(--reactour-accent)' : '#caccce'};
-  background-color: ${props =>
-    props.current === props.index ? 'var(--reactour-accent)' : 'transparent'};
-  
-  &:before {
-    content: counter(dot);
-    position: absolute;
-    bottom: calc(100% + .25em);
-    left: 50%;
-    opacity: 0;
-    transform: translate(-50%, 1em);
-    transition: .3s;
-    display: ${props =>
-      props.showNumber ? 'block' : 'none'};
-  }
-  
-  &:hover {
-    background-color: currentColor;
-    
-    &:before {
-      opacity: .5;
-      transform: translate(-50%, -2px);
-    }
-  }
-`
+const Dot = (props) => {
+    const {
+        disabled,
+        onClick,
+        current,
+        index,
+        showNumber,
+        className,
+    } = props;
 
-export default Dot
+    return (
+        <button
+            disabled={disabled}
+            onClick={onClick}
+            className={bem.scoped(className, {
+                'is-current': current === index,
+                'show-number': showNumber,
+            })}
+        />
+    );
+};
+
+Dot.propTypes = {
+    disabled: PropTypes.bool.isRequired,
+    onClick: PropTypes.func.isRequired,
+    current: PropTypes.number.isRequired,
+    index: PropTypes.number.isRequired,
+    showNumber: PropTypes.bool.isRequired,
+    className: PropTypes.string.isRequired,
+};
+
+export default Dot;

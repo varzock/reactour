@@ -75,7 +75,7 @@ const steps = [
 | `prevButton` | prev navigation button text | `string` |  |  |
 | `scrollDuration` | Smooth scroll duration when positioning the target element | `number` | `1` |  |
 | `scrollOffset` | Offset when positioning the target element | `number` | calculates the vertical center of the page |  |
-| `showButtons` | Show **helper** navigation butons | `bool` | `true` |  |
+| `showButtons` | Show **helper** navigation buttons | `bool` | `true` |  |
 | `showNavigation` | Show **helper** navigation dots | `bool` | `true` |  |
 | `showNavigationNumber` | Show number when hovers on each navigation dots | `bool` | `true` |  |
 | `showNumber` | Show **helper** number badge | `bool` | `true` |  |

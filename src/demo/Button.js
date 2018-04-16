@@ -1,6 +1,6 @@
-import React from 'react'
-import styled from 'styled-components'
-import { fontFamily, headingSizes, themeColors } from './settings'
+import React from 'react';
+import styled from 'styled-components';
+import { fontFamily, headingSizes, themeColors } from './settings';
 
 const styles = `
   border: 0;
@@ -16,31 +16,31 @@ const styles = `
   &:hover {
     opacity: .9;
   }
-`
-const Button = styled.button`${styles}`
-const Link = styled.a`${styles}`
+`;
+const Button = styled.button`${styles}`;
+const Link = styled.a`${styles}`;
 
 const StyledButton = styled(Button)`
   font-size: ${props => (props.h ? headingSizes[props.h - 1] : 'inherit')};
   background-color: ${props => themeColors[props.color] || themeColors.dark};
-`
+`;
 
 const StyledLink = styled(Link)`
   text-decoration: none;
   font-size: ${props => (props.h ? headingSizes[props.h - 1] : 'inherit')};
   background: ${props => (props.bg ? themeColors[props.bg] : 'none')};
   color: ${props =>
-    props.bg
-      ? 'white'
-      : props.color ? themeColors[props.color] : themeColors.black};
+        (props.bg
+            ? 'white'
+            : props.color ? themeColors[props.color] : themeColors.black)};
   ${props =>
-    props.nospaces &&
+        props.nospaces &&
     `
     display: inline-block;
     padding: 0;
     margin: 0;
   `}
-`
+`;
 
-export { StyledButton as Button }
-export { StyledLink as Link }
+export { StyledButton as Button };
+export { StyledLink as Link };
