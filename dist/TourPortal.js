@@ -202,9 +202,7 @@ var TourPortal = function (_Component) {
             var attrs = hx.getNodeRect(node);
             var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
             var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-            /*const nodeStyles = getComputedStyle(node);
-            const helperStyles = getComputedStyle(this.helper);*/
-            //console.log(this.getViewportOffset(node));
+
             if (!hx.inView(_extends({}, attrs, { w: w, h: h, threshold: inViewThreshold
             }))) {
                 var parentScroll = (0, _scrollparent2.default)(node);
@@ -431,14 +429,13 @@ var TourPortal = function (_Component) {
             var isNextButtonDisabled = !locale.last && current === steps.length - 1;
             var nextButtonLabel = locale.last && isLastStep ? locale.last : locale.next || null;
 
-            // Custom dot component in use?
-            var NavigationDot = components.Dot ? components.Dot : _index.Dot;
-
-            // Are we using a custom component for the close button?
-            var CloseButton = components.CloseButton ? components.CloseButton : _index.Close;
-
             // Show navigation dots?
             var showNavigation = showProgress && layout === DEFAULT_LAYOUT;
+
+            var NextButton = components.NextButton || _index.Arrow;
+            var PrevButton = components.PrevButton || _index.Arrow;
+            var NavigationDot = components.NavigationDot || _index.Dot;
+            var CloseButton = components.CloseButton || _index.Close;
 
             if (isOpen) {
                 var _bem$scoped;
@@ -533,18 +530,17 @@ var TourPortal = function (_Component) {
                             'div',
                             { className: _bemHelper2.default.scoped(className, controlsName)
                             },
-                            _react2.default.createElement(
-                                'button',
+                            layout === MINIMAL_LAYOUT && _react2.default.createElement(
+                                CloseButton,
                                 {
+                                    onClick: onRequestClose,
                                     className: _bemHelper2.default.scoped(className, buttonName, {
-                                        skip: true,
-                                        'no-text': buttonName === null
-                                    }),
-                                    onClick: onRequestClose
+                                        skip: true
+                                    })
                                 },
                                 skipButtonLabel
                             ),
-                            showButtons && _react2.default.createElement(components.PrevButton, {
+                            showButtons && _react2.default.createElement(PrevButton, {
                                 className: _bemHelper2.default.scoped(className, buttonName, {
                                     'no-text': prevButtonLabel === null
                                 }),
@@ -569,7 +565,7 @@ var TourPortal = function (_Component) {
                                     });
                                 })
                             ),
-                            showButtons && _react2.default.createElement(components.NextButton, {
+                            showButtons && _react2.default.createElement(NextButton, {
                                 className: _bemHelper2.default.scoped(className, buttonName, {
                                     next: true,
                                     'no-text': nextButtonLabel === null
@@ -580,7 +576,7 @@ var TourPortal = function (_Component) {
                                 label: nextButtonLabel
                             })
                         ),
-                        _react2.default.createElement(CloseButton, {
+                        layout === DEFAULT_LAYOUT && _react2.default.createElement(CloseButton, {
                             onClick: onRequestClose,
                             className: _bemHelper2.default.scoped(className, closeButtonClassName)
                         })
@@ -676,9 +672,9 @@ TourPortal.defaultProps = {
         last: 'Last'
     },
     components: {
-        NextButton: _index.Arrow,
-        PrevButton: _index.Arrow,
-        Dot: null,
+        NextButton: null,
+        PrevButton: null,
+        NavigationDot: null,
         CloseButton: null
     },
     layout: DEFAULT_LAYOUT

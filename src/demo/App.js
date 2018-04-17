@@ -44,12 +44,26 @@ class App extends Component {
                   onRequestClose={this.closeTour}
                   steps={tourConfig}
                   isOpen={isTourOpen}
-                  layout="minimal"
               />
           </div>
       );
   }
 }
+
+class Test extends Component {
+    render() {
+        const {
+            onClick,
+            index,
+        } = this.props;
+
+        return (
+            <b onClick={onClick}>
+                {index}
+            </b>
+        )
+    }
+};
 
 const tourConfig = [
     {

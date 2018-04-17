@@ -22,9 +22,6 @@
   outline: 0;
   border-radius: 5px; }
 
-.reactour__content {
-  padding-right: 40px; }
-
 .reactour__badge {
   position: absolute;
   font-family: monospace;
@@ -137,6 +134,9 @@
 .reactour--default .reactour__controls {
   align-items: center;
   justify-content: space-between; }
+
+.reactour--default .reactour__content {
+  padding-right: 40px; }
 
 .reactour--minimal .reactour__controls {
   justify-content: flex-end; }

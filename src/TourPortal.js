@@ -143,9 +143,9 @@ class TourPortal extends Component {
             last: 'Last',
         },
         components: {
-            NextButton: Arrow,
-            PrevButton: Arrow,
-            Dot: null,
+            NextButton: null,
+            PrevButton: null,
+            NavigationDot: null,
             CloseButton: null,
         },
         layout: DEFAULT_LAYOUT,
@@ -329,9 +329,7 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
             document.documentElement.clientHeight,
             window.innerHeight || 0,
         );
-        /*const nodeStyles = getComputedStyle(node);
-        const helperStyles = getComputedStyle(this.helper);*/
-        //console.log(this.getViewportOffset(node));
+
         if (!hx.inView({
             ...attrs, w, h, threshold: inViewThreshold,
         })) {
@@ -490,18 +488,13 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
             ? locale.last
             : locale.next || null;
 
-        // Custom dot component in use?
-        const NavigationDot = components.Dot
-            ? components.Dot
-            : Dot;
-
-        // Are we using a custom component for the close button?
-        const CloseButton = components.CloseButton
-            ? components.CloseButton
-            : Close;
-
         // Show navigation dots?
         const showNavigation = showProgress && layout === DEFAULT_LAYOUT;
+
+        const NextButton = components.NextButton || Arrow;
+        const PrevButton = components.PrevButton || Arrow;
+        const NavigationDot = components.NavigationDot || Dot;
+        const CloseButton = components.CloseButton || Close;
 
         if (isOpen) {
             return (
@@ -589,17 +582,17 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
 
                         <div className={bem.scoped(className, controlsName)}
                         >
-                            <button
-                                className={bem.scoped(className, buttonName, {
-                                    skip: true,
-                                    'no-text': buttonName === null,
-                                })}
-                                onClick={onRequestClose}
-                            >
-                                {skipButtonLabel}
-                            </button>
-                            {showButtons && (
-                                <components.PrevButton
+                            { layout === MINIMAL_LAYOUT &&
+                                <CloseButton
+                                    onClick={onRequestClose}
+                                    className={bem.scoped(className, buttonName, {
+                                        skip: true,
+                                    })}
+                                >
+                                    {skipButtonLabel}
+                                </CloseButton> }
+                            { showButtons && (
+                                <PrevButton
                                     className={bem.scoped(className, buttonName, {
                                         'no-text': prevButtonLabel === null,
                                     })}
@@ -607,9 +600,9 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
                                     disabled={isPrevButtonDisabled}
                                     label={prevButtonLabel}
                                 />
-                            )}
+                            ) }
 
-                            {showNavigation && (
+                            { showNavigation && (
                                 <nav className={bem.scoped(className, navigationClassName)}>
                                     {steps.map((s, i) => (
                                         <NavigationDot
@@ -623,10 +616,10 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
                                         />
                                     ))}
                                 </nav>
-                            )}
+                            ) }
 
-                            {showButtons && (
-                                <components.NextButton
+                            { showButtons && (
+                                <NextButton
                                     className={bem.scoped(className, buttonName, {
                                         next: true,
                                         'no-text': nextButtonLabel === null,
@@ -636,13 +629,14 @@ Please check the \`steps\` Tour prop Array at position: ${current + 1}.`);
                                     inverted
                                     label={nextButtonLabel}
                                 />
-                            )}
+                            ) }
                         </div>
 
-                        <CloseButton
-                            onClick={onRequestClose}
-                            className={bem.scoped(className, closeButtonClassName)}
-                        />
+                        { layout === DEFAULT_LAYOUT &&
+                            <CloseButton
+                                onClick={onRequestClose}
+                                className={bem.scoped(className, closeButtonClassName)}
+                            /> }
                     </Guide>
                 </div>
             );

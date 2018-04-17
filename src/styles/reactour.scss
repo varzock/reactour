@@ -26,10 +26,6 @@ $ns: 'reactour';
     border-radius: 5px;
   }
 
-  &__content {
-    padding-right: 40px;
-  }
-
   &__badge {
     position: absolute;
     font-family: monospace;
@@ -164,9 +160,15 @@ $ns: 'reactour';
   }
 
   // Layouts
-  &--default .#{$ns}__controls {
-    align-items: center;
-    justify-content: space-between;
+  &--default {
+    .#{$ns}__controls {
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .#{$ns}__content {
+      padding-right: 40px;
+    }
   }
 
   &--minimal .#{$ns}__controls {
